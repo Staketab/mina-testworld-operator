@@ -13,13 +13,18 @@ else
 endif
 
 # --------------------------
-.PHONY: keystore setup op lt nodex op-down lt-down nodex-down logs
+.PHONY: keystore rule setup op lt nodex op-down lt-down nodex-down logs
 
 keystore:
-	sudo docker run --interactive --tty --rm --entrypoint=mina-libp2p-generate-keypair --volume $(pwd)/keys:/keys ${MINA} --privkey-path ${LIBP2P_KEYPATH}
+	sudo docker run -ti --rm --entrypoint=mina --volume ${HOME}/keys:/root/keys ${MINA} libp2p generate-keypair --privkey-path ${LIBP2P_KEYPATH}
+
+rule:
+	sudo chmod 700 ${KEYS_PATH}
+	sudo chmod 600 ${LIBP2P_KEYPATH}
 
 setup:		    ## Generate LIB_P2P Keystore.
 	@make keystore
+	@make rule
 
 op:
 	$(DOCKER_COMPOSE_COMMAND) ${COMPOSE_OPERATOR} up -d
@@ -40,4 +45,7 @@ nodex-down:
 	$(DOCKER_COMPOSE_COMMAND) ${COMPOSE_NODE_EXPORTER} down
 
 logs:
-	$(DOCKER_COMPOSE_COMMAND) logs -f
+	#sudo docker logs --follow operator -f --tail 1000
+ 
+op-status:
+	sudo docker exec -it operator mina client status
