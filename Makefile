@@ -1,3 +1,4 @@
+include .env
 COMPOSE_ALL_FILES := -f docker-compose.operator.yml -f docker-compose.load-tester.yml -f docker-compose.node-exporter.yml
 COMPOSE_OPERATOR := -f docker-compose.operator.yml
 COMPOSE_LOAD_TESTER := -f docker-compose.load-tester.yml
@@ -12,10 +13,12 @@ else
 endif
 
 # --------------------------
-.PHONY: setup keystore certs all elk monitoring tools build down stop restart rm logs
+.PHONY: keystore setup op lt nodex op-down lt-down nodex-down logs
 
-setup:		    ## Generate Elasticsearch SSL Certs and Keystore.
-	@make certs
+keystore:
+	sudo docker run --interactive --tty --rm --entrypoint=mina-libp2p-generate-keypair --volume $(pwd)/keys:/keys ${MINA} --privkey-path ${LIBP2P_KEYPATH}
+
+setup:		    ## Generate LIB_P2P Keystore.
 	@make keystore
 
 op:
