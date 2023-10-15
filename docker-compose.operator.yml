@@ -1,0 +1,53 @@
+version: "3.3"
+
+services:
+  mina:
+    image: ${MINA}
+    container_name: operator
+    ports:
+      - "6060:6060"
+      - "8302:8302"
+      - "127.0.0.1:3085:3085"
+    restart: always
+    env_file:
+      - $HOME/mina-testworld-operator/.env
+    environment: 
+      MINA_PRIVKEY_PASS: ${MINA_PRIVKEY_PASS}
+      UPTIME_PRIVKEY_PASS: ${UPTIME_PRIVKEY_PASS}
+      LIBP2P_PRIVKEY_PASS: ${LIBP2P_PRIVKEY_PASS}
+      RAYON_NUM_THREADS: ${RAYON_NUM_THREADS}
+    volumes:
+      - "${CONFIG_DIRECTORY}:/root/.mina-config"
+      - "${KEYPATH}:/root/keys:ro"
+    command: >
+      daemon
+        --peer-list-url ${PEER_LIST}
+        --block-producer-key ${KEYPATH}
+        --uptime-url ${UPTIME_URL}
+        --uptime-submitter-key ${KEYPATH}
+        --libp2p-keypair ${LIBP2P_KEYPATH}
+        --node-status-url ${NODE_STATUS_URL}
+        --node-error-url ${NODE_ERROR_URL}
+        --itn-keys ${ITN_KEYS}
+        --itn-graphql-port 3089
+        --external-ip ${EXTERNAL_IP}
+        --config-directory ${CONFIG_DIRECTORY}
+        --metrics-port 6060
+        --enable-peer-exchange  true
+        --log-precomputed-blocks true
+        --max-connections 200
+        --generate-genesis-proof  true
+        --file-log-rotations 500
+        --log-json
+        --log-snark-work-gossip true
+        --internal-tracing
+        --insecure-rest-server
+        --log-level Debug
+        --file-log-level Debug
+        ${STOP_TIME}
+    networks:
+      - mina
+          
+networks:
+  mina:
+    driver: bridge
