@@ -45,7 +45,7 @@ nodex-down:
 	$(DOCKER_COMPOSE_COMMAND) ${COMPOSE_NODE_EXPORTER} down
 
 logs:
-	#sudo docker logs --follow operator -f --tail 1000
+	sudo docker logs --follow operator -f --tail 1000
  
 op-status:
 	sudo docker exec -it operator mina client status
