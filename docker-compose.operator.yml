@@ -8,6 +8,7 @@ services:
       - "6060:6060"
       - "8302:8302"
       - "127.0.0.1:3085:3085"
+      - "0.0.0.0:3089:3089"
     restart: always
     env_file:
       - $HOME/mina-testworld-operator/.env
