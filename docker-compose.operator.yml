@@ -31,6 +31,7 @@ services:
         --node-error-url ${NODE_ERROR_URL}
         --itn-keys ${ITN_KEYS}
         --itn-graphql-port 3089
+        --itn-max-logs 10000
         --external-ip ${EXTERNAL_IP}
         --config-directory ${CONFIG_DIRECTORY}
         --metrics-port 6060
